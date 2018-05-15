@@ -1,4 +1,5 @@
-
+let threadArr = [];
+let threadAmt;
 
 function createInputs(){
 
@@ -44,21 +45,39 @@ function searchRedd(){
 function searchCallback(data){
 
     document.querySelector('.main').innerHTML = '';
+    threadAmt = data.data.children.length;
 
-    console.log(data);
-    console.log(data.data.children);
+    //console.log(data);
+    //console.log(data.data.children);
     data.data.children.forEach(element => {
+        let newScr = document.createElement('script');
+        newScr.src= element.data.url + '.json?&jsonp=commentCallback';
+        document.body.appendChild(newScr);
+        
+    /*
         let newLink = document.createElement('h2');
         newLink.classList.add('h2Link');
         newLink.innerHTML = element.data.title;
         newLink.addEventListener('click', function(){ window.open(element.data.url)})
         document.querySelector('.main').appendChild(newLink);
         console.log(element.data.selftext)
+    */
     });
+}
+
+function commentCallback(data){
+
+    threadArr.push(data);
+    
+    if(threadArr.length == threadAmt){
+        console.log(threadArr);
+    }
+
 }
 
 (function initApp(){
     createInputs();
+    
 
     document.querySelector('.searchText').addEventListener('keydown', searchReddPass);
     document.querySelector('.searchButton').addEventListener('click', searchRedd);
