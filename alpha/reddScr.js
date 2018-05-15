@@ -2,18 +2,27 @@
 
 function createInputs(){
 
+    let searchDiv = document.createElement('div');
+    searchDiv.classList.add('searchArea');
+    document.querySelector('.app').appendChild(searchDiv);
+
+
     let textIn = document.createElement('input');
     textIn.classList.add('searchText');
     textIn.placeholder = 'Enter text..'
-    document.querySelector('.app').appendChild(textIn);
+    document.querySelector('.searchArea').appendChild(textIn);
 
     let buttonIn = document.createElement('button');
     buttonIn.classList.add('searchButton');
     buttonIn.innerHTML= 'Search';
-    document.querySelector('.app').appendChild(buttonIn);
+    document.querySelector('.searchArea').appendChild(buttonIn);
 
-    
+    let dataArea = document.createElement('div');
+    dataArea.classList.add('main');
+    document.querySelector('.app').appendChild(dataArea);
+
 }
+
 
 function searchReddPass(e){
     if(e.keyCode == 13){
@@ -23,8 +32,29 @@ function searchReddPass(e){
 
 function searchRedd(){
     if(document.querySelector('.searchText').value.length > 0){
-        console.log('sup')
+        
+        let sQuery = document.querySelector('.searchText').value;
+        let reddScr = document.createElement('script');
+        reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=new&restrict_sr=1&jsonp=searchCallback';
+        document.body.appendChild(reddScr)
+
     }
+}
+
+function searchCallback(data){
+
+    document.querySelector('.main').innerHTML = '';
+
+    console.log(data);
+    console.log(data.data.children);
+    data.data.children.forEach(element => {
+        let newLink = document.createElement('h2');
+        newLink.classList.add('h2Link');
+        newLink.innerHTML = element.data.title;
+        newLink.addEventListener('click', function(){ window.open(element.data.url)})
+        document.querySelector('.main').appendChild(newLink);
+        console.log(element.data.selftext)
+    });
 }
 
 (function initApp(){
