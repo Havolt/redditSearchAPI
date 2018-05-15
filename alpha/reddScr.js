@@ -11,10 +11,25 @@ function createInputs(){
     buttonIn.classList.add('searchButton');
     buttonIn.innerHTML= 'Search';
     document.querySelector('.app').appendChild(buttonIn);
+
+    
 }
 
+function searchReddPass(e){
+    if(e.keyCode == 13){
+        searchRedd()
+    }
+}
+
+function searchRedd(){
+    if(document.querySelector('.searchText').value.length > 0){
+        console.log('sup')
+    }
+}
 
 (function initApp(){
-    console.log('hi');
     createInputs();
+
+    document.querySelector('.searchText').addEventListener('keydown', searchReddPass);
+    document.querySelector('.searchButton').addEventListener('click', searchRedd);
 })()
