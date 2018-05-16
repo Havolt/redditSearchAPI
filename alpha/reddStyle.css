@@ -16,6 +16,7 @@ html, body{
     font-size: 2.8em;
     text-align: center;
     font-weight: bold;
+    text-shadow: 2px 2px 2px lightgrey;
 }
 
 .searchSec{
@@ -31,20 +32,27 @@ html, body{
     border-bottom: #551177 4px solid;
     border-left: #b83ff4 4px solid;
     border-top: #b83ff4 4px solid;
+    outline: none;
     color: white;
     margin: 0 auto;
+    box-shadow: 2px 2px 2px lightgrey;
 }
 
 .searchButton:hover{
     cursor: pointer;
 }
 
-.h2Link{
-    color: blue;
-    text-decoration: underline;
+.searchButton:active{
+    border-right: #b83ff4 4px solid;
+    border-bottom: #b83ff4 4px solid;
+    border-left: #551177 4px solid;
+    border-top: #551177 4px solid;
+    box-shadow: 0 0 0 lightgrey;
 }
 
-.h2Link{
-    cursor: pointer;
+.mainText{
+    font-size: 1.1em;
+    width: 85%;
+    margin: 0 auto;
 }
 

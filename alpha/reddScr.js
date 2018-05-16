@@ -27,6 +27,11 @@ function createInputs(){
     dataArea.classList.add('main');
     document.querySelector('.app').appendChild(dataArea);
 
+    let textArea = document.createElement('div');
+    textArea.classList.add('mainText');
+    document.querySelector('.main').appendChild(textArea);
+
+
 }
 
 
@@ -42,7 +47,7 @@ function searchRedd(){
 
 function searchCallback(data){
 
-    document.querySelector('.main').innerHTML = '';
+    document.querySelector('.mainText').innerHTML = '';
     threadAmt = data.data.children.length;
 
     //console.log(data);
@@ -73,10 +78,11 @@ function commentCallback(data){
 
 function randComment(){
 
+    let regexCheck =  new RegExp('/\r?\n|\r/g');
     let goodPick = true;
     let rNum = Math.floor(Math.random() * threadArr.length);
     let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
-    console.log(threadArr[rNum][0].data.children[0].data.title);
+    //console.log(threadArr[rNum][0].data.children[0].data.title);
     console.log(threadArr[rNum][1].data.children[crNum].data.body);
 
     badComm.forEach(element => {
@@ -90,8 +96,16 @@ function randComment(){
     });
     if(goodPick){
         let creepComment = document.createElement('div');
+        let ccSplit = threadArr[rNum][1].data.children[crNum].data.body.split('');
+        console.log(ccSplit);
+        for(let i = 0; i < ccSplit.length; i++){
+            if(ccSplit[i] == regexCheck){
+                console.log('line break! ' + i)
+            }
+        }
+        
         creepComment.innerHTML = threadArr[rNum][1].data.children[crNum].data.body;
-        document.querySelector('.main').appendChild(creepComment);
+        document.querySelector('.mainText').appendChild(creepComment);
     }
 }
 
