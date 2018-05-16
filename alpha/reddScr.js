@@ -4,33 +4,31 @@ let badComm = ["**Attention! [Serious] Tag Notice**"];
 let searchTerm = ['scary', 'creepy', 'paranormal', 'spooky', 'scariest', 'creepiest'];
 let scriptAmt = 1;
 
+let elementsData = [
+    {type: 'div', className: ['titleSec'], append: '.app'},
+    {type: 'div', className: ['titleHead'], append: '.titleSec', inHL: 'No Context Creepy'},
+    {type: 'div', className: ['titleDesc'], append: '.titleSec', inHL: 'Creepy comments and stories from reddit with none of the context.'},
+    {type: 'div', className: ['searchSec'], append: '.app'},
+    {type: 'button', className: ['searchButton'], append: '.searchSec', inHL: 'Generate'},
+    {type: 'div', className: ['main'], append: '.app'},
+    {type: 'div', className: ['mainText'], append: '.main'}
+]
+
+function createEl(obj){
+    let newEl = document.createElement(obj.type);
+    obj.className.forEach(element => {
+        newEl.classList.add(element);
+    });
+    if(obj.inHL){newEl.innerHTML = obj.inHL};
+    document.querySelector(obj.append).appendChild(newEl);
+}
+
 //Creates interactive section of website
 function createInputs(){
 
-    let titleDiv = document.createElement('div');
-    titleDiv.classList.add('titleSec');
-    document.querySelector('.app').appendChild(titleDiv);
-    let titleHead = document.createElement('div');
-    titleHead.classList.add('titleHead');
-    titleHead.innerHTML = 'No Context Creepy';
-    document.querySelector('.titleSec').appendChild(titleHead);
-
-    let searchDiv = document.createElement('div');
-    searchDiv.classList.add('searchSec');
-    document.querySelector('.app').appendChild(searchDiv);
-    let buttonIn = document.createElement('button');
-    buttonIn.classList.add('searchButton');
-    buttonIn.innerHTML= 'Generate';
-    document.querySelector('.searchSec').appendChild(buttonIn);
-
-    let dataArea = document.createElement('div');
-    dataArea.classList.add('main');
-    document.querySelector('.app').appendChild(dataArea);
-
-    let textArea = document.createElement('div');
-    textArea.classList.add('mainText');
-    document.querySelector('.main').appendChild(textArea);
-
+    elementsData.forEach(element => {
+        createEl(element);
+    });
 
 }
 
@@ -72,6 +70,10 @@ function commentCallback(data){
     threadArr.push(data);
     if(threadArr.length == threadAmt){
         //console.log(threadArr);
+        console.log(document.querySelectorAll('script'));
+        for(let i = document.querySelectorAll('script').length-1; i >= scriptAmt ; i--){
+            document.querySelectorAll('script')[i].parentNode.removeChild(document.querySelectorAll('script')[i]);
+        }
         randComment();
     }
 }
