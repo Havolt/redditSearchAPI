@@ -34,6 +34,7 @@ function searchReddPass(e){
 function searchRedd(){
     if(document.querySelector('.searchText').value.length > 0){
         
+        threadArr = [];
         let sQuery = document.querySelector('.searchText').value;
         let reddScr = document.createElement('script');
         reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=new&restrict_sr=1&jsonp=searchCallback';
@@ -66,13 +67,25 @@ function searchCallback(data){
 }
 
 function commentCallback(data){
-
     threadArr.push(data);
-    
     if(threadArr.length == threadAmt){
-        console.log(threadArr);
+        //console.log(threadArr);
+        randComment();
     }
+}
 
+function randComment(){
+
+    let rNum = Math.floor(Math.random() * threadArr.length);
+    let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
+    console.log(threadArr[rNum][0].data.children[0].data.title);
+    console.log(threadArr[rNum][1].data.children[crNum].data.body);
+
+    let creepComment = document.createElement('div');
+    creepComment.innerHTML = threadArr[rNum][1].data.children[crNum].data.body;
+
+
+    document.querySelector('.main').appendChild(creepComment);
 }
 
 (function initApp(){
