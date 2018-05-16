@@ -1,23 +1,27 @@
 let threadArr = [];
 let threadAmt;
 let badComm = ["**Attention! [Serious] Tag Notice**"];
-let searchTerm = ['scary', 'creepy', 'paranormal', 'spooky', 'scariest', 'creepiest']
+let searchTerm = ['scary', 'creepy', 'paranormal', 'spooky', 'scariest', 'creepiest'];
+let scriptAmt = 1;
 
+//Creates interactive section of website
 function createInputs(){
 
+    let titleDiv = document.createElement('div');
+    titleDiv.classList.add('titleSec');
+    document.querySelector('.app').appendChild(titleDiv);
+    let titleHead = document.createElement('div');
+    titleHead.classList.add('titleHead');
+    titleHead.innerHTML = 'No Context Creepy';
+    document.querySelector('.titleSec').appendChild(titleHead);
+
     let searchDiv = document.createElement('div');
-    searchDiv.classList.add('searchArea');
+    searchDiv.classList.add('searchSec');
     document.querySelector('.app').appendChild(searchDiv);
-
-    let textIn = document.createElement('input');
-    textIn.classList.add('searchText');
-    textIn.placeholder = 'Enter text..'
-    document.querySelector('.searchArea').appendChild(textIn);
-
     let buttonIn = document.createElement('button');
     buttonIn.classList.add('searchButton');
-    buttonIn.innerHTML= 'Search';
-    document.querySelector('.searchArea').appendChild(buttonIn);
+    buttonIn.innerHTML= 'Generate';
+    document.querySelector('.searchSec').appendChild(buttonIn);
 
     let dataArea = document.createElement('div');
     dataArea.classList.add('main');
@@ -26,22 +30,14 @@ function createInputs(){
 }
 
 
-function searchReddPass(e){
-    if(e.keyCode == 13){
-        searchRedd()
-    }
-}
-
 function searchRedd(){
-    if(document.querySelector('.searchText').value.length > 0){
-        
+
         threadArr = [];
-        let sQuery = document.querySelector('.searchText').value;
+        let sRand = Math.floor(Math.random()*searchTerm.length);
+        let sQuery = searchTerm[sRand];
         let reddScr = document.createElement('script');
         reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=random&restrict_sr=1&jsonp=searchCallback';
         document.body.appendChild(reddScr)
-
-    }
 }
 
 function searchCallback(data){
@@ -87,12 +83,11 @@ function randComment(){
         if(threadArr[rNum][1].data.children[crNum].data.body.slice(0, 35) == element.slice(0,35)){
             goodPick = false;
             randComment();
-        }else if(threadArr[rNum][1].data.children[crNum].data.body.length < 35){
+        }else if(threadArr[rNum][1].data.children[crNum].data.body.length < 40){
             goodPick = false;
             randComment();
         }
     });
-    
     if(goodPick){
         let creepComment = document.createElement('div');
         creepComment.innerHTML = threadArr[rNum][1].data.children[crNum].data.body;
@@ -103,6 +98,5 @@ function randComment(){
 (function initApp(){
     createInputs();
     
-    document.querySelector('.searchText').addEventListener('keydown', searchReddPass);
     document.querySelector('.searchButton').addEventListener('click', searchRedd);
 })()
