@@ -1,5 +1,7 @@
 let threadArr = [];
 let threadAmt;
+let callInProgress = false;
+let userCall = false;
 //Array of terms that should return bad request
 let badComm = ["**Attention! [Serious] Tag Notice**"];
 //Search terms that are used to search reddit for relevant thread   
@@ -37,21 +39,36 @@ function createInputs(){
 }
 
 //Gets a random set of 25 threads from askreddit
-function searchRedd(){
+function searchRedd(e){
+    
+    if(!callInProgress){
+        if(e){
+            userCall = true;
+        }
 
-        threadArr = [];
-        let sRand = Math.floor(Math.random()*searchTerm.length);
-        let sQuery = searchTerm[sRand];
-        let reddScr = document.createElement('script');
-        reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=random&limit=8&restrict_sr=1&jsonp=searchCallback';
-        document.body.appendChild(reddScr)
+        if(threadArr[0] == undefined){
+            console.log('first time');
+            threadArr = [];
+            let sRand = Math.floor(Math.random()*searchTerm.length);
+            let sQuery = searchTerm[sRand];
+            let reddScr = document.createElement('script');
+            reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=random&limit=8&restrict_sr=1&jsonp=searchCallback';
+            callInProgress = true;
+            document.body.appendChild(reddScr)
+        }else{
+            document.querySelector('.mainText').innerHTML = '';
+            randComment();
+            if(threadArr[1] == undefined){
+                searchRedd();
+            }
+        }
+    }
 }
 
 //The callback function in jsonp from reddit server
 function searchCallback(data){
-    document.querySelector('.mainText').innerHTML = '';
+    if(userCall){document.querySelector('.mainText').innerHTML = ''};
     threadAmt = data.data.children.length;
-    //console.log(data);
     //console.log(data.data.children);
     data.data.children.forEach(element => {
         let newScr = document.createElement('script');
@@ -78,7 +95,8 @@ function commentCallback(data){
         for(let i = document.querySelectorAll('script').length-1; i >= scriptAmt ; i--){
             document.querySelectorAll('script')[i].parentNode.removeChild(document.querySelectorAll('script')[i]);
         }
-        randComment();
+        callInProgress = false;
+        if(userCall){randComment()};
     }
 }
 
@@ -119,6 +137,8 @@ function randComment(){
         ccSplit = ccSplit.join('');
         creepComment.innerHTML = ccSplit;
         document.querySelector('.mainText').appendChild(creepComment);
+        threadArr.splice(rNum, 1);
+        userCall = false;
     }
 }
 
