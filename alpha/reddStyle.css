@@ -72,6 +72,6 @@ html, body{
     margin: 0 auto;
     padding-bottom: 40px;
     border-top: #ccc 1px solid;
-    
+    overflow: hidden;
 }
 

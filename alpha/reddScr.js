@@ -2,6 +2,7 @@ let threadArr = [];
 let threadAmt;
 let callInProgress = false;
 let userCall = false;
+let lmtAtmpts = 0;
 //Array of terms that should return bad request
 let badComm = ["**Attention! [Serious] Tag Notice**"];
 //Search terms that are used to search reddit for relevant thread   
@@ -101,9 +102,10 @@ function commentCallback(data){
 }
 
 //Checks if comment is good and if so displays it to user
-function randComment(){
+function randComment(tryAgain){
     let goodPick = true;
     let rNum = Math.floor(Math.random() * threadArr.length);
+    if(tryAgain){rNum = tryAgain};
     let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
     console.log(threadArr[rNum][0].data.children[0].data.title);
 
@@ -113,16 +115,36 @@ function randComment(){
         goodPick == false;
         randComment();
     }
+
+    
     
 
     badComm.forEach(element => {
-        if(threadArr[rNum][1].data.children[crNum].data.body.slice(0, 35) == element.slice(0,35)){
+        if(threadArr[rNum][1].data.children[crNum].data.body.length < 35){
             goodPick = false;
-            randComment();
-        }else if(threadArr[rNum][1].data.children[crNum].data.body.length < 40){
-            goodPick = false;
-            randComment();
+            lmtAtmpts++;
+            if(lmtAtmpts > 5){
+                threadArr.splice(rNum, 1);
+                lmtAtmpts = 0;
+                randComment();
+            }else{
+                randComment(rNum);
+            }
         }
+        else if(threadArr[rNum][1].data.children[crNum].data.body.slice(0, 35) == element.slice(0,35)){
+            goodPick = false;
+            lmtAtmpts++;
+            if(lmtAtmpts > 5){
+                threadArr.splice(rNum, 1);
+                lmtAtmpts = 0;
+                randComment();
+            }else{
+                randComment(rNum);
+            }
+            
+            
+        }
+        
     });
     if(goodPick){
         let creepComment = document.createElement('div');
@@ -139,6 +161,10 @@ function randComment(){
         document.querySelector('.mainText').appendChild(creepComment);
         threadArr.splice(rNum, 1);
         userCall = false;
+        lmtAtmpts = 0;
+        if(threadArr[1] == undefined){
+            searchRedd();
+        }
     }
 }
 
@@ -147,4 +173,5 @@ function randComment(){
 (function initApp(){
     createInputs();
     document.querySelector('.searchButton').addEventListener('click', searchRedd);
+    searchRedd();
 })()
