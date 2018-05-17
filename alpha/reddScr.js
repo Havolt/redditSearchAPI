@@ -3,7 +3,7 @@ let threadAmt;
 let callInProgress = false;
 let userCall = false;
 let lmtAtmpts = 0;
-let textFade = {val: 1, change: -1};
+let textFade = {val: 1, change: +1};
 //Array of terms that should return bad request
 let badComm = ["**Attention! [Serious] Tag Notice**"];
 //Search terms that are used to search reddit for relevant thread   
@@ -47,7 +47,7 @@ function searchRedd(e){
         
         if(e){
             userCall = true;
-            fadeText();
+            document.querySelector('.mainText').style.opacity = 0;
         }
 
         if(threadArr[0] == undefined){
@@ -171,14 +171,11 @@ function randComment(tryAgain){
 
 function fadeText(){
 
-    if(textFade.change == 1){
-    textFade.val += textFade.change * 10;
-    }else{
-        textFade.val += textFade.change; 
-    }
+    console.log(textFade.val);
+    textFade.val += textFade.change; 
     document.querySelector('.mainText').style.opacity = (textFade.val/10);
-    if(textFade.val == 0 || textFade.val == 10){
-        textFade.change = -textFade.change;
+    if(textFade.val == 10 ){
+        textFade.val = 0;
     }else{
         setTimeout(fadeText, 50);
     }
