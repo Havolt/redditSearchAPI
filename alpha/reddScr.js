@@ -1,9 +1,12 @@
 let threadArr = [];
 let threadAmt;
+//Array of terms that should return bad request
 let badComm = ["**Attention! [Serious] Tag Notice**"];
+//Search terms that are used to search reddit for relevant thread   
 let searchTerm = ['scary', 'creepy', 'paranormal', 'spooky', 'scariest', 'creepiest'];
 let scriptAmt = 1;
 
+//List of elements to be created using createEl function
 let elementsData = [
     {type: 'div', className: ['titleSec'], append: '.app'},
     {type: 'div', className: ['titleHead'], append: '.titleSec', inHL: 'No Context Creepy'},
@@ -14,6 +17,7 @@ let elementsData = [
     {type: 'div', className: ['mainText'], append: '.main'}
 ]
 
+//Function that takes object and creates an element
 function createEl(obj){
     let newEl = document.createElement(obj.type);
     obj.className.forEach(element => {
@@ -32,7 +36,7 @@ function createInputs(){
 
 }
 
-
+//Gets a random set of 25 threads from askreddit
 function searchRedd(){
 
         threadArr = [];
@@ -43,11 +47,10 @@ function searchRedd(){
         document.body.appendChild(reddScr)
 }
 
+//The callback function in jsonp from reddit server
 function searchCallback(data){
-
     document.querySelector('.mainText').innerHTML = '';
     threadAmt = data.data.children.length;
-
     //console.log(data);
     //console.log(data.data.children);
     data.data.children.forEach(element => {
@@ -66,6 +69,7 @@ function searchCallback(data){
     });
 }
 
+//Retrieves comment from threadArr
 function commentCallback(data){
     threadArr.push(data);
     if(threadArr.length == threadAmt){
@@ -78,8 +82,8 @@ function commentCallback(data){
     }
 }
 
+//Checks if comment is good and if so displays it to user
 function randComment(){
-
     let goodPick = true;
     let rNum = Math.floor(Math.random() * threadArr.length);
     let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
@@ -105,14 +109,14 @@ function randComment(){
             }
         }
         ccSplit = ccSplit.join('');
-        
         creepComment.innerHTML = ccSplit;
         document.querySelector('.mainText').appendChild(creepComment);
     }
 }
 
+
+//Initializes application
 (function initApp(){
     createInputs();
-    
     document.querySelector('.searchButton').addEventListener('click', searchRedd);
 })()
