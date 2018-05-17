@@ -3,6 +3,7 @@ let threadAmt;
 let callInProgress = false;
 let userCall = false;
 let lmtAtmpts = 0;
+let textFade = {val: 1, change: -1};
 //Array of terms that should return bad request
 let badComm = ["**Attention! [Serious] Tag Notice**"];
 //Search terms that are used to search reddit for relevant thread   
@@ -43,8 +44,10 @@ function createInputs(){
 function searchRedd(e){
     
     if(!callInProgress){
+        
         if(e){
             userCall = true;
+            fadeText();
         }
 
         if(threadArr[0] == undefined){
@@ -107,7 +110,7 @@ function randComment(tryAgain){
     let rNum = Math.floor(Math.random() * threadArr.length);
     if(tryAgain){rNum = tryAgain};
     let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
-    console.log(threadArr[rNum][0].data.children[0].data.title);
+    //console.log(threadArr[rNum][0].data.children[0].data.title);
 
     if(threadArr[rNum][1].data.children[crNum].data.body == undefined){
         threadArr.splice(rNum, 1);
@@ -116,11 +119,8 @@ function randComment(tryAgain){
         randComment();
     }
 
-    
-    
-
     badComm.forEach(element => {
-        if(threadArr[rNum][1].data.children[crNum].data.body.length < 35){
+        if(threadArr[rNum][1].data.children[crNum].data.body.length < 55){
             goodPick = false;
             lmtAtmpts++;
             if(lmtAtmpts > 5){
@@ -147,6 +147,7 @@ function randComment(tryAgain){
         
     });
     if(goodPick){
+        if(userCall){fadeText()};
         let creepComment = document.createElement('div');
         let ccSplit = threadArr[rNum][1].data.children[crNum].data.body.split('');
 
@@ -166,6 +167,22 @@ function randComment(tryAgain){
             searchRedd();
         }
     }
+}
+
+function fadeText(){
+
+    if(textFade.change == 1){
+    textFade.val += textFade.change * 10;
+    }else{
+        textFade.val += textFade.change; 
+    }
+    document.querySelector('.mainText').style.opacity = (textFade.val/10);
+    if(textFade.val == 0 || textFade.val == 10){
+        textFade.change = -textFade.change;
+    }else{
+        setTimeout(fadeText, 50);
+    }
+
 }
 
 
