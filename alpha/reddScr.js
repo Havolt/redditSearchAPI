@@ -43,7 +43,7 @@ function searchRedd(){
         let sRand = Math.floor(Math.random()*searchTerm.length);
         let sQuery = searchTerm[sRand];
         let reddScr = document.createElement('script');
-        reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=random&restrict_sr=1&jsonp=searchCallback';
+        reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=random&limit=8&restrict_sr=1&jsonp=searchCallback';
         document.body.appendChild(reddScr)
 }
 
@@ -87,7 +87,15 @@ function randComment(){
     let goodPick = true;
     let rNum = Math.floor(Math.random() * threadArr.length);
     let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
-    //console.log(threadArr[rNum][0].data.children[0].data.title);
+    console.log(threadArr[rNum][0].data.children[0].data.title);
+
+    if(threadArr[rNum][1].data.children[crNum].data.body == undefined){
+        threadArr.splice(rNum, 1);
+        console.log('nothing here');
+        goodPick == false;
+        randComment();
+    }
+    
 
     badComm.forEach(element => {
         if(threadArr[rNum][1].data.children[crNum].data.body.slice(0, 35) == element.slice(0,35)){
