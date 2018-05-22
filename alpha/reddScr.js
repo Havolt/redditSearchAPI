@@ -1,6 +1,8 @@
 let threadArr = [];
 let threadAmt;
-let charLmt = 2000;
+//if charLmt = 0 show all stories, if -1 show short stories if 1 show long stories
+let charLmt = 0;
+let currFilter = 'Show all stories ';
 let loadNum = {count: 0, runTrue : true, cover: false};
 let callInProgress = false;
 let userCall = false;
@@ -20,7 +22,13 @@ let elementsData = [
     {type: 'div', className: ['optionsMenu', 'hidden'], append: '.optionsSec'},
     {type: 'ul', className: ['optionsFilter'], append: '.optionsMenu'},
     {type: 'div', className: ['filterLong', 'filterItem'], append: '.optionsMenu'},
-    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLong', inHL: 'Show all stories <i class="fa fa-angle-down"></i>'},
+    {type: 'div', className: ['filterLongText', 'filterLongTextCurr', 'filterItemText'], append: '.filterLong', inHL: 'Show all stories <i class="fa fa-angle-down"></i>'},
+    {type: 'div', className: ['filterArrow', 'hidden'], append: '.filterLong'},
+    {type: 'div', className: ['filterLongDrop', 'hidden'], append: '.filterLong'},
+    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: 'Show short stories'},
+    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: 'Show long stories'},
+
+    {type: 'div', className: ['filterCross'], append: '.optionsMenu', inHL: '<i class="fa fa-times"></i>'},
     {type: 'div', className: ['titleSec'], append: '.app'},
     {type: 'div', className: ['titleHead'], append: '.titleSec', inHL: 'No Context Creepy'},
     {type: 'div', className: ['titleDesc'], append: '.titleSec', inHL: 'Creepy comments and stories from reddit with none of the context.'},
@@ -60,7 +68,6 @@ function searchRedd(e){
         }
 
         if(threadArr[0] == undefined){
-            console.log('first time');
             threadArr = [];
             let sRand = Math.floor(Math.random()*searchTerm.length);
             let sQuery = searchTerm[sRand];
@@ -211,9 +218,30 @@ function onLoad(){
 }
 
 function optionsButtFunc(){
-    console.log('optButt')
     document.querySelector('.optionsButton').classList.add('hidden');
     document.querySelector('.optionsMenu').classList.remove('hidden');
+}
+
+function filterButtFunc(){
+    document.querySelector('.optionsButton').classList.remove('hidden');
+    document.querySelector('.optionsMenu').classList.add('hidden');
+}
+
+function chooseStoryLength(){
+        let removeTrue = false;
+        for(let j = 0; j < document.querySelector('.filterLongDrop').classList.length; j++){
+            if(document.querySelector('.filterLongDrop').classList[j] == 'hidden'){removeTrue = true}
+        }
+        if(removeTrue){
+            document.querySelector('.filterLongDrop').classList.remove('hidden');
+            document.querySelector('.filterArrow').classList.remove('hidden');
+            document.querySelector('.filterLongText').innerHTML = currFilter + '<i class="fa fa-angle-up"></i>';
+        }
+        else{
+            document.querySelector('.filterLongDrop').classList.add('hidden');
+            document.querySelector('.filterArrow').classList.add('hidden');
+            document.querySelector('.filterLongText').innerHTML = currFilter + '<i class="fa fa-angle-down"></i>';
+        }
 }
 
 
@@ -224,5 +252,7 @@ function optionsButtFunc(){
     createInputs();
     document.querySelector('.searchButton').addEventListener('click', searchRedd);
     document.querySelector('.optionsButton').addEventListener('click', optionsButtFunc);
+    document.querySelector('.filterCross').addEventListener('click', filterButtFunc);
+    document.querySelector('.filterLongTextCurr').addEventListener('click', chooseStoryLength);
     searchRedd();
 })()
