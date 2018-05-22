@@ -13,6 +13,8 @@ let scriptAmt = 1;
 
 //List of elements to be created using createEl function
 let elementsData = [
+    {type: 'div', className: ['optionsSec'], append: '.app'},
+    {type: 'div', className: ['optionsButton'], append: '.optionsSec', inHL: '<i class="fa fa-list"></i>'},
     {type: 'div', className: ['titleSec'], append: '.app'},
     {type: 'div', className: ['titleHead'], append: '.titleSec', inHL: 'No Context Creepy'},
     {type: 'div', className: ['titleDesc'], append: '.titleSec', inHL: 'Creepy comments and stories from reddit with none of the context.'},
@@ -201,10 +203,17 @@ function onLoad(){
     }
 }
 
+function optionsButtFunc(){
+    console.log('button');
+}
+
+
+
 
 //Initializes application
 (function initApp(){
     createInputs();
     document.querySelector('.searchButton').addEventListener('click', searchRedd);
+    document.querySelector('.optionsButton').addEventListener('click', optionsButtFunc);
     searchRedd();
 })()
