@@ -1,5 +1,6 @@
 let threadArr = [];
 let threadAmt;
+let loadNum = {count: 0, runTrue : true};
 let callInProgress = false;
 let userCall = false;
 let lmtAtmpts = 0;
@@ -33,11 +34,10 @@ function createEl(obj){
 
 //Creates interactive section of website
 function createInputs(){
-
     elementsData.forEach(element => {
         createEl(element);
     });
-
+    onLoad();
 }
 
 //Gets a random set of 25 threads from askreddit
@@ -101,6 +101,7 @@ function commentCallback(data){
         }
         callInProgress = false;
         if(userCall){randComment()};
+        loadNum.runTrue = false;
     }
 }
 
@@ -114,13 +115,12 @@ function randComment(tryAgain){
 
     if(threadArr[rNum][1].data.children[crNum].data.body == undefined){
         threadArr.splice(rNum, 1);
-        console.log('nothing here');
         goodPick == false;
         randComment();
     }
 
     badComm.forEach(element => {
-        if(threadArr[rNum][1].data.children[crNum].data.body.length < 55){
+        if(threadArr[rNum][1].data.children[crNum].data.body.length < 85){
             goodPick = false;
             lmtAtmpts++;
             if(lmtAtmpts > 5){
@@ -141,8 +141,6 @@ function randComment(tryAgain){
             }else{
                 randComment(rNum);
             }
-            
-            
         }
         
     });
@@ -171,7 +169,6 @@ function randComment(tryAgain){
 
 function fadeText(){
 
-    console.log(textFade.val);
     textFade.val += textFade.change; 
     document.querySelector('.mainText').style.opacity = (textFade.val/10);
     if(textFade.val == 10 ){
@@ -179,7 +176,24 @@ function fadeText(){
     }else{
         setTimeout(fadeText, 50);
     }
+}
 
+function onLoad(){
+    let sbEnd = '';
+    if(loadNum.count == 0){
+        sbEnd = '&nbsp;&nbsp;'
+    }
+    else if(loadNum.count == 1){
+        sbEnd = '.&nbsp;'
+    }else if(loadNum.count == 2){
+        sbEnd = '..';
+    }
+    loadNum.count++;
+    if(loadNum.count == 3){loadNum.count = 0}
+    document.querySelector('.searchButton').innerHTML='Loading.'+sbEnd;
+    if(loadNum.runTrue){setTimeout(onLoad, 450)}else{
+        document.querySelector('.searchButton').innerHTML= 'Generate';
+    }
 }
 
 
