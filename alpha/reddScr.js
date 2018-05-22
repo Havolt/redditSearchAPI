@@ -1,8 +1,10 @@
 let threadArr = [];
 let threadAmt;
+let charLmt = 2000;
 let loadNum = {count: 0, runTrue : true, cover: false};
 let callInProgress = false;
 let userCall = false;
+let callLimit = 12;
 let lmtAtmpts = 0;
 let textFade = {val: 1, change: +1};
 //Array of terms that should return bad request
@@ -15,6 +17,10 @@ let scriptAmt = 1;
 let elementsData = [
     {type: 'div', className: ['optionsSec'], append: '.app'},
     {type: 'div', className: ['optionsButton'], append: '.optionsSec', inHL: '<i class="fa fa-list"></i>'},
+    {type: 'div', className: ['optionsMenu', 'hidden'], append: '.optionsSec'},
+    {type: 'ul', className: ['optionsFilter'], append: '.optionsMenu'},
+    {type: 'div', className: ['filterLong', 'filterItem'], append: '.optionsMenu'},
+    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLong', inHL: 'Show all stories <i class="fa fa-angle-down"></i>'},
     {type: 'div', className: ['titleSec'], append: '.app'},
     {type: 'div', className: ['titleHead'], append: '.titleSec', inHL: 'No Context Creepy'},
     {type: 'div', className: ['titleDesc'], append: '.titleSec', inHL: 'Creepy comments and stories from reddit with none of the context.'},
@@ -31,6 +37,7 @@ function createEl(obj){
         newEl.classList.add(element);
     });
     if(obj.inHL){newEl.innerHTML = obj.inHL};
+    if(obj.inType){newEl.type = obj.inType};
     document.querySelector(obj.append).appendChild(newEl);
 }
 
@@ -58,7 +65,7 @@ function searchRedd(e){
             let sRand = Math.floor(Math.random()*searchTerm.length);
             let sQuery = searchTerm[sRand];
             let reddScr = document.createElement('script');
-            reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=random&limit=8&restrict_sr=1&jsonp=searchCallback';
+            reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=random&limit='+callLimit+'&restrict_sr=1&jsonp=searchCallback';
             callInProgress = true;
             document.body.appendChild(reddScr)
         }else{
@@ -204,7 +211,9 @@ function onLoad(){
 }
 
 function optionsButtFunc(){
-    console.log('button');
+    console.log('optButt')
+    document.querySelector('.optionsButton').classList.add('hidden');
+    document.querySelector('.optionsMenu').classList.remove('hidden');
 }
 
 

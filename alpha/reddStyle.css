@@ -6,6 +6,10 @@ html, body{
     height: 100%;
 }
 
+.hidden{
+    display: none;
+}
+
 .app{
     width: 80%;
     margin: 10px auto 0 auto;
@@ -15,24 +19,26 @@ html, body{
 }
 
 .optionsSec{
-    padding-top: 20px;
-    min-height: 20px;
+    height: 40px;
 }
 
 .optionsMenu{
     width: 100%;
-    background: #7d1dad;
+    height: 40px;
+    border-bottom: 1px solid #a889b7;
     color: white;
+    background: #7d1dad;
 }
 
 .optionsButton{
-    margin-top: 4px;
+    margin-top: 20px;
     margin-right: 20px;
     padding: 2px 4px;
     float: right;
     font-size: 1.4em;
     border: 1px solid #777;
     border-radius: 3px;
+    
 }
 
 .optionsButton:hover{
@@ -40,6 +46,20 @@ html, body{
     background: #ddd;
     color: #7d1dad;
 }
+
+.filterItem{
+    display: inline-flex;
+    font-size: 1.1em;
+    margin-top: 10px;
+    margin-left: 10px;
+    color: #ddd;
+}
+
+.filterItem:hover{
+    cursor: pointer;
+    color: white;
+}
+
 
 .titleSec{
     text-align: center;
