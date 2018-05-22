@@ -1,6 +1,6 @@
 let threadArr = [];
 let threadAmt;
-let loadNum = {count: 0, runTrue : true};
+let loadNum = {count: 0, runTrue : true, cover: false};
 let callInProgress = false;
 let userCall = false;
 let lmtAtmpts = 0;
@@ -179,6 +179,7 @@ function fadeText(){
 }
 
 function onLoad(){
+    
     let sbEnd = '';
     if(loadNum.count == 0){
         sbEnd = '&nbsp;&nbsp;'
@@ -191,6 +192,10 @@ function onLoad(){
     loadNum.count++;
     if(loadNum.count == 3){loadNum.count = 0}
     document.querySelector('.searchButton').innerHTML='Loading.'+sbEnd;
+        
+    let buttonCover = document.createElement('div');
+        buttonCover.classList.add('searchCover');
+        document.querySelector('.searchButton').appendChild(buttonCover);
     if(loadNum.runTrue){setTimeout(onLoad, 450)}else{
         document.querySelector('.searchButton').innerHTML= 'Generate';
     }

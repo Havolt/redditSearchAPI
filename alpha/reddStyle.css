@@ -38,6 +38,7 @@ html, body{
 }
 
 .searchButton{
+    position: relative;
     font-size: 2.4em;
     border-radius: 5px;
     background: #7d1dad;
@@ -62,6 +63,22 @@ html, body{
     border-left: #551177 4px solid;
     border-top: #551177 4px solid;
     box-shadow: 0 0 0 lightgrey;
+}
+
+.searchCover{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    left: -4px;
+    top: -4px;;
+    background: #777;
+    opacity: 0.5;
+    border: 4px solid #666;
+    position: absolute;
+}
+
+.searchCover:hover{
+    cursor: default;
 }
 
 
