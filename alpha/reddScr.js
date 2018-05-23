@@ -3,11 +3,11 @@ let threadAmt;
 //if charLmt = 0 show all stories, if -1 show short stories if 1 show long stories
 let charLmt = 0;
 let currFilter = ['Show all stories ', 'Show short stories ', 'Show long stories '];
-let filterObj = {main: {text: 'Show all stories '}, drop0: {text: 'Show short stories '}, drop1: {text: 'Show long stories '}}
+let filterObj = {main: {text: 'Show all stories '}, drop0: {text: 'Show short stories '}, drop1: {text: 'Show long stories '}, min: 85, max : 0, isMax: false }
 let loadNum = {count: 0, runTrue : true, cover: false};
 let callInProgress = false;
 let userCall = false;
-let callLimit = 12;
+let callLimit = 14;
 let lmtAtmpts = 0;
 let textFade = {val: 1, change: +1};
 //Array of terms that should return bad request
@@ -137,10 +137,11 @@ function randComment(tryAgain){
     }
 
     badComm.forEach(element => {
-        if(threadArr[rNum][1].data.children[crNum].data.body.length < 85){
+        console.log(threadArr[rNum][1].data.children[crNum].data.body);
+        if(threadArr[rNum][1].data.children[crNum].data.body.length < filterObj.min || (filterObj.isMax && threadArr[rNum][1].data.children[crNum].data.body.length > filterObj.max)){
             goodPick = false;
             lmtAtmpts++;
-            if(lmtAtmpts > 5){
+            if(lmtAtmpts > 8){
                 threadArr.splice(rNum, 1);
                 lmtAtmpts = 0;
                 randComment();
@@ -254,7 +255,6 @@ function giveTxtDropElsEvts(){
 }
 
 function dropEvent(num, num2){
-
     filterObj.main.text = filterObj['drop'+num].text;
     let tmpArr = [];
     for(let i = 0; i < currFilter.length; i++){
@@ -271,7 +271,25 @@ function dropEvent(num, num2){
         filterObj['drop'+i].text = tmpArr[i];
         document.querySelector('.filterLongDrop').children[i].innerHTML = filterObj['drop'+i].text;
     }
-    
+    chooseStoryLength();
+    changeFilter()
+}
+
+//changes min and max filter amounts depending on user choice
+function changeFilter(){
+    if(filterObj.main.text == 'Show all stories '){
+        filterObj.isMax = false;
+        filterObj.max = 0;
+        filterObj.min = 85;
+    }else if(filterObj.main.text == 'Show short stories '){
+        filterObj.isMax = true;
+        filterObj.max = 1500;
+        filterObj.min = 55;
+    }else if(filterObj.main.text == 'Show long stories '){
+        filterObj.isMax = false;
+        filterObj.max = 0;
+        filterObj.min = 1200;
+    }
 }
 
 
