@@ -6,6 +6,7 @@ let currFilter = ['Show all stories ', 'Show short stories ', 'Show long stories
 let filterObj = {main: {text: 'Show all stories '}, drop0: {text: 'Show short stories '}, drop1: {text: 'Show long stories '}, min: 85, max : 0, isMax: false }
 let loadNum = {count: 0, runTrue : true, cover: false};
 let callInProgress = false;
+let randCallInProgress = false;
 let userCall = false;
 let callLimit = 14;
 let lmtAtmpts = 0;
@@ -61,7 +62,7 @@ function createInputs(){
 //Gets a random set of 25 threads from askreddit
 function searchRedd(e){
     
-    if(!callInProgress){
+    if(!callInProgress && !randCallInProgress){
         
         if(e){
             userCall = true;
@@ -124,28 +125,39 @@ function commentCallback(data){
 
 //Checks if comment is good and if so displays it to user
 function randComment(tryAgain){
+    randCallInProgress = true;
     let goodPick = true;
     let rNum = Math.floor(Math.random() * threadArr.length);
-    if(tryAgain){rNum = tryAgain};
+    if(tryAgain){rNum = tryAgain; console.log(tryAgain +' this is tryAgain number')};
+    console.log(threadArr[rNum][1].data)
     let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
     //console.log(threadArr[rNum][0].data.children[0].data.title);
 
-    if(threadArr[rNum][1].data.children[crNum].data.body == undefined){
+    if(!threadArr[rNum][1].data.children[crNum].data.body){
+        console.log('do i ever log')
         threadArr.splice(rNum, 1);
         goodPick == false;
         randComment();
     }
 
     badComm.forEach(element => {
-        console.log(threadArr[rNum][1].data.children[crNum].data.body);
+        console.log('threadArr length == ' + threadArr.length);
+        console.log(rNum);
+        console.log(crNum);
+        console.log(threadArr[rNum][1])
+        console.log(threadArr[rNum][1].data.children[crNum].data.body)
         if(threadArr[rNum][1].data.children[crNum].data.body.length < filterObj.min || (filterObj.isMax && threadArr[rNum][1].data.children[crNum].data.body.length > filterObj.max)){
             goodPick = false;
             lmtAtmpts++;
             if(lmtAtmpts > 8){
                 threadArr.splice(rNum, 1);
                 lmtAtmpts = 0;
-                randComment();
+                if(threadArr.length < 1){
+                    searchRedd();
+                    userCall = true;
+                }else{randComment();}
             }else{
+                console.log('trying again dude')
                 randComment(rNum);
             }
         }
@@ -182,6 +194,8 @@ function randComment(tryAgain){
         if(threadArr[1] == undefined){
             searchRedd();
         }
+        console.log('good pick done');
+        randCallInProgress = false;
     }
 }
 
