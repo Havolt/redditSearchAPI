@@ -3,6 +3,7 @@ let threadAmt;
 //if charLmt = 0 show all stories, if -1 show short stories if 1 show long stories
 let charLmt = 0;
 let currFilter = 'Show all stories ';
+let filterObj = {main: {text: 'Show all stories '}, drop1: {text: 'Show short stories '}, drop2: {text: 'Show long stories '}}
 let loadNum = {count: 0, runTrue : true, cover: false};
 let callInProgress = false;
 let userCall = false;
@@ -22,11 +23,11 @@ let elementsData = [
     {type: 'div', className: ['optionsMenu', 'hidden'], append: '.optionsSec'},
     {type: 'ul', className: ['optionsFilter'], append: '.optionsMenu'},
     {type: 'div', className: ['filterLong', 'filterItem'], append: '.optionsMenu'},
-    {type: 'div', className: ['filterLongText', 'filterLongTextCurr', 'filterItemText'], append: '.filterLong', inHL: 'Show all stories <i class="fa fa-angle-down"></i>'},
+    {type: 'div', className: ['filterLongText', 'filterLongTextCurr', 'filterItemText'], append: '.filterLong', inHL: filterObj.main.text+'<i class="fa fa-angle-down"></i>'},
     {type: 'div', className: ['filterArrow', 'hidden'], append: '.filterLong'},
     {type: 'div', className: ['filterLongDrop', 'hidden'], append: '.filterLong'},
-    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: 'Show short stories'},
-    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: 'Show long stories'},
+    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: filterObj.drop1.text},
+    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: filterObj.drop2.text},
 
     {type: 'div', className: ['filterCross'], append: '.optionsMenu', inHL: '<i class="fa fa-times"></i>'},
     {type: 'div', className: ['titleSec'], append: '.app'},
@@ -244,6 +245,18 @@ function chooseStoryLength(){
         }
 }
 
+function giveTxtDropElsEvts(){
+    for(let i = 0; i < document.querySelector('.filterLongDrop').children.length; i++){
+        console.log(i);
+        document.querySelector('.filterLongDrop').children[i].addEventListener('click', function(){
+            dropEvent(i);
+        })
+    }
+}
+
+function dropEvent(num){
+    console.log('I am drop event ' + num);
+}
 
 
 
@@ -254,5 +267,6 @@ function chooseStoryLength(){
     document.querySelector('.optionsButton').addEventListener('click', optionsButtFunc);
     document.querySelector('.filterCross').addEventListener('click', filterButtFunc);
     document.querySelector('.filterLongTextCurr').addEventListener('click', chooseStoryLength);
+    giveTxtDropElsEvts()
     searchRedd();
 })()
