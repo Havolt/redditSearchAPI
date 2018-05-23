@@ -2,8 +2,8 @@ let threadArr = [];
 let threadAmt;
 //if charLmt = 0 show all stories, if -1 show short stories if 1 show long stories
 let charLmt = 0;
-let currFilter = 'Show all stories ';
-let filterObj = {main: {text: 'Show all stories '}, drop1: {text: 'Show short stories '}, drop2: {text: 'Show long stories '}}
+let currFilter = ['Show all stories ', 'Show short stories ', 'Show long stories '];
+let filterObj = {main: {text: 'Show all stories '}, drop0: {text: 'Show short stories '}, drop1: {text: 'Show long stories '}}
 let loadNum = {count: 0, runTrue : true, cover: false};
 let callInProgress = false;
 let userCall = false;
@@ -26,8 +26,8 @@ let elementsData = [
     {type: 'div', className: ['filterLongText', 'filterLongTextCurr', 'filterItemText'], append: '.filterLong', inHL: filterObj.main.text+'<i class="fa fa-angle-down"></i>'},
     {type: 'div', className: ['filterArrow', 'hidden'], append: '.filterLong'},
     {type: 'div', className: ['filterLongDrop', 'hidden'], append: '.filterLong'},
+    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: filterObj.drop0.text},
     {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: filterObj.drop1.text},
-    {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: filterObj.drop2.text},
 
     {type: 'div', className: ['filterCross'], append: '.optionsMenu', inHL: '<i class="fa fa-times"></i>'},
     {type: 'div', className: ['titleSec'], append: '.app'},
@@ -236,26 +236,42 @@ function chooseStoryLength(){
         if(removeTrue){
             document.querySelector('.filterLongDrop').classList.remove('hidden');
             document.querySelector('.filterArrow').classList.remove('hidden');
-            document.querySelector('.filterLongText').innerHTML = currFilter + '<i class="fa fa-angle-up"></i>';
+            document.querySelector('.filterLongText').innerHTML = filterObj.main.text + '<i class="fa fa-angle-up"></i>';
         }
         else{
             document.querySelector('.filterLongDrop').classList.add('hidden');
             document.querySelector('.filterArrow').classList.add('hidden');
-            document.querySelector('.filterLongText').innerHTML = currFilter + '<i class="fa fa-angle-down"></i>';
+            document.querySelector('.filterLongText').innerHTML = filterObj.main.text + '<i class="fa fa-angle-down"></i>';
         }
 }
 
 function giveTxtDropElsEvts(){
     for(let i = 0; i < document.querySelector('.filterLongDrop').children.length; i++){
-        console.log(i);
         document.querySelector('.filterLongDrop').children[i].addEventListener('click', function(){
-            dropEvent(i);
+            dropEvent(i)
         })
     }
 }
 
-function dropEvent(num){
-    console.log('I am drop event ' + num);
+function dropEvent(num, num2){
+
+    filterObj.main.text = filterObj['drop'+num].text;
+    let tmpArr = [];
+    for(let i = 0; i < currFilter.length; i++){
+        tmpArr.push(currFilter[i]);
+    }
+    for(let i = 0; i < tmpArr.length; i++){
+        if(tmpArr[i] == filterObj.main.text){
+           tmpArr.splice(i, 1);
+        }
+    }
+
+    document.querySelector('.filterLongTextCurr').innerHTML = filterObj.main.text;
+    for(let i = 0; i < document.querySelector('.filterLongDrop').children.length; i++){
+        filterObj['drop'+i].text = tmpArr[i];
+        document.querySelector('.filterLongDrop').children[i].innerHTML = filterObj['drop'+i].text;
+    }
+    
 }
 
 
