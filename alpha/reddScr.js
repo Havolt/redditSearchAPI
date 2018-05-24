@@ -12,7 +12,7 @@ let callLimit = 14;
 let lmtAtmpts = 0;
 let textFade = {val: 1, change: +1};
 //Array of terms that should return bad request
-let badComm = ["**Attention! [Serious] Tag Notice**"];
+let badComm = "**Attention! [Serious] Tag Notice**";
 //Search terms that are used to search reddit for relevant thread   
 let searchTerm = ['scary', 'creepy', 'paranormal', 'spooky', 'scariest', 'creepiest'];
 let scriptAmt = 1;
@@ -117,6 +117,12 @@ function commentCallback(data){
         for(let i = document.querySelectorAll('script').length-1; i >= scriptAmt ; i--){
             document.querySelectorAll('script')[i].parentNode.removeChild(document.querySelectorAll('script')[i]);
         }
+        for(let i = 0; i < threadArr.length; i++){
+            if(threadArr[i][1].data.children.length < 2){
+                threadArr.splice(0, 1);
+            }
+        }
+        if(threadArr.length < 4){searchRedd()}
         callInProgress = false;
         if(userCall){randComment()};
         loadNum.runTrue = false;
@@ -125,6 +131,7 @@ function commentCallback(data){
 
 //Checks if comment is good and if so displays it to user
 function randComment(tryAgain){
+/*
     randCallInProgress = true;
     let goodPick = true;
     let rNum = Math.floor(Math.random() * threadArr.length);
@@ -133,6 +140,7 @@ function randComment(tryAgain){
     let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
     //console.log(threadArr[rNum][0].data.children[0].data.title);
 
+    console.log('do you see me?')
     if(!threadArr[rNum][1].data.children[crNum].data.body){
         console.log('do i ever log')
         threadArr.splice(rNum, 1);
@@ -140,11 +148,10 @@ function randComment(tryAgain){
         randComment();
     }
 
-    badComm.forEach(element => {
         console.log('threadArr length == ' + threadArr.length);
         console.log(rNum);
         console.log(crNum);
-        console.log(threadArr[rNum][1])
+        console.log(threadArr)
         console.log(threadArr[rNum][1].data.children[crNum].data.body)
         if(threadArr[rNum][1].data.children[crNum].data.body.length < filterObj.min || (filterObj.isMax && threadArr[rNum][1].data.children[crNum].data.body.length > filterObj.max)){
             goodPick = false;
@@ -161,19 +168,20 @@ function randComment(tryAgain){
                 randComment(rNum);
             }
         }
-        else if(threadArr[rNum][1].data.children[crNum].data.body.slice(0, 35) == element.slice(0,35)){
+        else if(threadArr[rNum][1].data.children[crNum].data.body.slice(0, 35) == badComm){
             goodPick = false;
             lmtAtmpts++;
             if(lmtAtmpts > 5){
                 threadArr.splice(rNum, 1);
                 lmtAtmpts = 0;
                 randComment();
+                if(threadArr.length < 2){
+                    searchRedd();
+                }
             }else{
                 randComment(rNum);
-            }
-        }
-        
-    });
+            }  
+    };
     if(goodPick){
         if(userCall){fadeText()};
         let creepComment = document.createElement('div');
@@ -191,12 +199,20 @@ function randComment(tryAgain){
         threadArr.splice(rNum, 1);
         userCall = false;
         lmtAtmpts = 0;
-        if(threadArr[1] == undefined){
+        if(threadArr.length < 2){
             searchRedd();
         }
         console.log('good pick done');
         randCallInProgress = false;
     }
+*/
+    let rThreadNum = Math.floor(Math.random() * threadArr.length);
+    let rCommentNum = Math.floor(Math.random() * threadArr[rThreadNum][1].data.children.length);
+    
+    console.log(rThreadNum);
+    console.log(rCommentNum);
+    console.log(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+
 }
 
 function fadeText(){
