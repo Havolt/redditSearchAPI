@@ -206,12 +206,47 @@ function randComment(tryAgain){
         randCallInProgress = false;
     }
 */
-    let rThreadNum = Math.floor(Math.random() * threadArr.length);
+    let rThreadNum;
+    let goAgain = false;
+    if(tryAgain){
+        rThreadNum = tryAgain;
+        alert('had to try again');
+    }else{
+        rThreadNum = Math.floor(Math.random() * threadArr.length);
+    }
     let rCommentNum = Math.floor(Math.random() * threadArr[rThreadNum][1].data.children.length);
-    
-    console.log(rThreadNum);
-    console.log(rCommentNum);
-    console.log(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+
+
+    if(threadArr[rThreadNum][1].data.children[rCommentNum].data.body == undefined){
+        goAgain = true;
+        lmtAtmpts++;
+    }
+    else{
+        if(threadArr[rThreadNum][1].data.children[rCommentNum].data.body.length < filterObj.min && (!filterObj.isMax || threadArr[rThreadNum][1].data.children[rCommentNum].data.body.length > filterObj.max )){
+            goAgain = true;
+            lmtAtmpts++;
+        }else{
+            console.log(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+            threadArr.splice(rThreadNum, 1);
+            console.log(threadArr);
+        }
+    }
+
+    if(goAgain){
+        if(lmtAtmpts < 8){
+            randComment(rThreadNum)
+        }else{
+            threadAmt.splice(rThreadNum, 1);
+            lmtAtmpts = 0;
+            if(threadArr.length < 2){
+                userCall = true;
+                searchRedd();
+            }else{
+                randComment();
+            }
+        }
+    }
+
 
 }
 
