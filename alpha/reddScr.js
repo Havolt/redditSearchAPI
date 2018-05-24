@@ -210,13 +210,13 @@ function randComment(tryAgain){
     let goAgain = false;
     if(tryAgain){
         rThreadNum = tryAgain;
-        alert('had to try again');
     }else{
         rThreadNum = Math.floor(Math.random() * threadArr.length);
     }
     let rCommentNum = Math.floor(Math.random() * threadArr[rThreadNum][1].data.children.length);
 
 
+    //checks to see if comment has body on it and if it i the correct length
     if(threadArr[rThreadNum][1].data.children[rCommentNum].data.body == undefined){
         goAgain = true;
         lmtAtmpts++;
@@ -232,11 +232,12 @@ function randComment(tryAgain){
         }
     }
 
+    //makes randComment run again if it hasnt obtained correct length story
     if(goAgain){
         if(lmtAtmpts < 8){
             randComment(rThreadNum)
         }else{
-            threadAmt.splice(rThreadNum, 1);
+            threadArr.splice(rThreadNum, 1);
             lmtAtmpts = 0;
             if(threadArr.length < 2){
                 userCall = true;
@@ -250,8 +251,8 @@ function randComment(tryAgain){
 
 }
 
+//gives the text a slight fade effect to inform user its a new story loaded
 function fadeText(){
-
     textFade.val += textFade.change; 
     document.querySelector('.mainText').style.opacity = (textFade.val/10);
     if(textFade.val == 10 ){
@@ -261,8 +262,8 @@ function fadeText(){
     }
 }
 
+//function that animates the loading sequence to inform the user
 function onLoad(){
-    
     let sbEnd = '';
     if(loadNum.count == 0){
         sbEnd = '&nbsp;&nbsp;'
@@ -294,6 +295,7 @@ function filterButtFunc(){
     document.querySelector('.optionsMenu').classList.add('hidden');
 }
 
+//changes the display of the filter area
 function chooseStoryLength(){
         let removeTrue = false;
         for(let j = 0; j < document.querySelector('.filterLongDrop').classList.length; j++){
