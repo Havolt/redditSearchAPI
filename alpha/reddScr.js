@@ -137,81 +137,7 @@ function commentCallback(data){
 
 //Checks if comment is good and if so displays it to user
 function randComment(tryAgain){
-/*
-    randCallInProgress = true;
-    let goodPick = true;
-    let rNum = Math.floor(Math.random() * threadArr.length);
-    if(tryAgain){rNum = tryAgain; console.log(tryAgain +' this is tryAgain number')};
-    console.log(threadArr[rNum][1].data)
-    let crNum = Math.floor(Math.random() * threadArr[rNum][1].data.children.length);
-    //console.log(threadArr[rNum][0].data.children[0].data.title);
 
-    console.log('do you see me?')
-    if(!threadArr[rNum][1].data.children[crNum].data.body){
-        console.log('do i ever log')
-        threadArr.splice(rNum, 1);
-        goodPick == false;
-        randComment();
-    }
-
-        console.log('threadArr length == ' + threadArr.length);
-        console.log(rNum);
-        console.log(crNum);
-        console.log(threadArr)
-        console.log(threadArr[rNum][1].data.children[crNum].data.body)
-        if(threadArr[rNum][1].data.children[crNum].data.body.length < filterObj.min || (filterObj.isMax && threadArr[rNum][1].data.children[crNum].data.body.length > filterObj.max)){
-            goodPick = false;
-            lmtAtmpts++;
-            if(lmtAtmpts > 8){
-                threadArr.splice(rNum, 1);
-                lmtAtmpts = 0;
-                if(threadArr.length < 1){
-                    searchRedd();
-                    userCall = true;
-                }else{randComment();}
-            }else{
-                console.log('trying again dude')
-                randComment(rNum);
-            }
-        }
-        else if(threadArr[rNum][1].data.children[crNum].data.body.slice(0, 35) == badComm){
-            goodPick = false;
-            lmtAtmpts++;
-            if(lmtAtmpts > 5){
-                threadArr.splice(rNum, 1);
-                lmtAtmpts = 0;
-                randComment();
-                if(threadArr.length < 2){
-                    searchRedd();
-                }
-            }else{
-                randComment(rNum);
-            }  
-    };
-    if(goodPick){
-        if(userCall){fadeText()};
-        let creepComment = document.createElement('div');
-        let ccSplit = threadArr[rNum][1].data.children[crNum].data.body.split('');
-
-        for(let i = 0; i < ccSplit.length; i++){
-            if(ccSplit[i] == '\n' && ccSplit[i+1] == '\n'){
-                ccSplit[i] = '<br />';
-                ccSplit[i+1] = '<br />';
-            }
-        }
-        ccSplit = ccSplit.join('');
-        creepComment.innerHTML = ccSplit;
-        document.querySelector('.mainText').appendChild(creepComment);
-        threadArr.splice(rNum, 1);
-        userCall = false;
-        lmtAtmpts = 0;
-        if(threadArr.length < 2){
-            searchRedd();
-        }
-        console.log('good pick done');
-        randCallInProgress = false;
-    }
-*/
     let rThreadNum;
     let goAgain = false;
     if(tryAgain){
@@ -232,7 +158,15 @@ function randComment(tryAgain){
             goAgain = true;
             lmtAtmpts++;
         }else{
-            //console.log(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+            //code that runs when comment is perfect
+
+            let tmpText = []
+            let linkRegex = /(http:\/\/)?(www\.)(([^\s]*))/g;;
+            let finalStory = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
+            tmpText = linkRegex.exec(finalStory);
+            console.log(tmpText)
+            console.log(finalStory.replace(linkRegex, '<a>' + linkRegex + '</a>' ));
+
             document.querySelector('.mainText').innerHTML = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
             fadeText();
             prevStories.arr.push(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
@@ -242,7 +176,6 @@ function randComment(tryAgain){
             prevStories.currDisp = prevStories.arr.length-1;
             checkStoryArrow();
             threadArr.splice(rThreadNum, 1);
-            //console.log(threadArr);
         }
     }
 
@@ -386,7 +319,6 @@ function changeStory(numb){
         document.querySelector('.mainText').innerHTML = prevStories.arr[prevStories.currDisp]; 
     }
     checkStoryArrow();
-    console.log(prevStories.currDisp);
 }
 
 function  checkStoryArrow(){
