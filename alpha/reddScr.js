@@ -8,7 +8,7 @@ let loadNum = {count: 0, runTrue : true, cover: false};
 let callInProgress = false;
 let randCallInProgress = false;
 let userCall = false;
-let callLimit = 14;
+let callLimit = 25;
 let lmtAtmpts = 0;
 let textFade = {val: 1, change: +1};
 //Array of terms that should return bad request
@@ -56,7 +56,6 @@ function createInputs(){
     elementsData.forEach(element => {
         createEl(element);
     });
-    onLoad();
 }
 
 //Gets a random set of 25 threads from askreddit
@@ -69,11 +68,13 @@ function searchRedd(e){
             document.querySelector('.mainText').style.opacity = 0;
         }
 
-        if(threadArr[0] == undefined){
+        if(threadArr.length < 2){
             threadArr = [];
             let sRand = Math.floor(Math.random()*searchTerm.length);
             let sQuery = searchTerm[sRand];
             let reddScr = document.createElement('script');
+            loadNum.runTrue = true;
+            onLoad();
             reddScr.src = 'https://www.reddit.com/r/AskReddit/search.json?q='+sQuery+'&sort=random&limit='+callLimit+'&restrict_sr=1&jsonp=searchCallback';
             callInProgress = true;
             document.body.appendChild(reddScr)
@@ -122,7 +123,8 @@ function commentCallback(data){
                 threadArr.splice(0, 1);
             }
         }
-        if(threadArr.length < 4){searchRedd()}
+        if(threadArr.length < 4){
+            searchRedd()}
         callInProgress = false;
         if(userCall){randComment()};
         loadNum.runTrue = false;
@@ -227,6 +229,8 @@ function randComment(tryAgain){
             lmtAtmpts++;
         }else{
             console.log(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+            document.querySelector('.mainText').innerHTML = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
+            fadeText();
             threadArr.splice(rThreadNum, 1);
             console.log(threadArr);
         }
@@ -241,6 +245,7 @@ function randComment(tryAgain){
             lmtAtmpts = 0;
             if(threadArr.length < 2){
                 userCall = true;
+                loadNum.runTrue = true;
                 searchRedd();
             }else{
                 randComment();
@@ -263,17 +268,19 @@ function fadeText(){
 }
 
 //function that animates the loading sequence to inform the user
-function onLoad(){
+function onLoad(callLoc){
     let sbEnd = '';
+    console.log(loadNum.count);
     if(loadNum.count == 0){
-        sbEnd = '&nbsp;&nbsp;'
+        sbEnd = '&nbsp;&nbsp';
     }
     else if(loadNum.count == 1){
         sbEnd = '.&nbsp;'
     }else if(loadNum.count == 2){
-        sbEnd = '..';
+        sbEnd = '..'  ;
     }
     loadNum.count++;
+    
     if(loadNum.count == 3){loadNum.count = 0}
     document.querySelector('.searchButton').innerHTML='Loading.'+sbEnd;
         
@@ -282,6 +289,7 @@ function onLoad(){
         document.querySelector('.searchButton').appendChild(buttonCover);
     if(loadNum.runTrue){setTimeout(onLoad, 450)}else{
         document.querySelector('.searchButton').innerHTML= 'Generate';
+        loadNum.count = 0;
     }
 }
 
