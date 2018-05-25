@@ -16,6 +16,7 @@ let badComm = "**Attention! [Serious] Tag Notice**";
 //Search terms that are used to search reddit for relevant thread   
 let searchTerm = ['scary', 'creepy', 'paranormal', 'spooky', 'scariest', 'creepiest'];
 let scriptAmt = 1;
+let prevStories = {arr: [], currDisp: 0};
 
 //List of elements to be created using createEl function
 let elementsData = [
@@ -36,6 +37,9 @@ let elementsData = [
     {type: 'div', className: ['titleDesc'], append: '.titleSec', inHL: 'Creepy comments and stories from reddit with none of the context.'},
     {type: 'div', className: ['searchSec'], append: '.app'},
     {type: 'button', className: ['searchButton'], append: '.searchSec', inHL: 'Generate'},
+    {type: 'div', className: ['chngStorySec'], append: '.searchSec'},
+    {type: 'div', className: ['chngStoryButtPrev', 'chngStoryButt'], append: '.chngStorySec', inHL: '<i class="fa fa-arrow-circle-left"></i>'},
+    {type: 'div', className: ['chngStoryButtNext', 'chngStoryButt'], append: '.chngStorySec', inHL: '<i class="fa fa-arrow-circle-right"></i>'},
     {type: 'div', className: ['main'], append: '.app'},
     {type: 'div', className: ['mainText'], append: '.main'}
 ]
@@ -228,11 +232,15 @@ function randComment(tryAgain){
             goAgain = true;
             lmtAtmpts++;
         }else{
-            console.log(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+            //console.log(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
             document.querySelector('.mainText').innerHTML = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
             fadeText();
+            prevStories.arr.push(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+            if(prevStories.arr.length > 20){
+                prevStories.arr.shift();
+            }
             threadArr.splice(rThreadNum, 1);
-            console.log(threadArr);
+            //console.log(threadArr);
         }
     }
 
@@ -270,7 +278,6 @@ function fadeText(){
 //function that animates the loading sequence to inform the user
 function onLoad(callLoc){
     let sbEnd = '';
-    console.log(loadNum.count);
     if(loadNum.count == 0){
         sbEnd = '&nbsp;&nbsp';
     }
