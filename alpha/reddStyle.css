@@ -187,6 +187,7 @@ html, body{
 .chngStorySec{
     margin-top: 35px; 
     height: 24px;
+    margin-bottom: 2px;
 }
 
 .chngStoryButt{
@@ -197,6 +198,7 @@ html, body{
 
 .chngStoryButt:hover{
     cursor: pointer;
+    color: #222;
 }
 
 .chngStoryButtPrev{

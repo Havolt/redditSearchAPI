@@ -30,7 +30,6 @@ let elementsData = [
     {type: 'div', className: ['filterLongDrop', 'hidden'], append: '.filterLong'},
     {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: filterObj.drop0.text},
     {type: 'div', className: ['filterLongText', 'filterItemText'], append: '.filterLongDrop', inHL: filterObj.drop1.text},
-
     {type: 'div', className: ['filterCross'], append: '.optionsMenu', inHL: '<i class="fa fa-times"></i>'},
     {type: 'div', className: ['titleSec'], append: '.app'},
     {type: 'div', className: ['titleHead'], append: '.titleSec', inHL: 'No Context Creepy'},
@@ -374,6 +373,15 @@ function changeFilter(){
     }
 }
 
+function changeStory(numb){
+    if(numb == -1 && prevStories.currDisp > 0){
+        prevStories.currDisp--;
+    }else if(numb == 1 && prevStories.currDisp < threadArr.length){
+        prevStories.currDisp++;
+    } 
+    console.log(prevStories.currDisp);
+}
+
 
 
 //Initializes application
@@ -383,6 +391,12 @@ function changeFilter(){
     document.querySelector('.optionsButton').addEventListener('click', optionsButtFunc);
     document.querySelector('.filterCross').addEventListener('click', filterButtFunc);
     document.querySelector('.filterLongTextCurr').addEventListener('click', chooseStoryLength);
+    document.querySelector('.chngStoryButtPrev').addEventListener('click', function(){
+        changeStory(-1);
+    })
+    document.querySelector('.chngStoryButtNext').addEventListener('click', function(){
+        changeStory(1);
+    })
     giveTxtDropElsEvts()
     searchRedd();
 })()
