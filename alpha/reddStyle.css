@@ -209,6 +209,15 @@ html, body{
     float: right;
 }
 
+.chngStoryButtStop{
+    color: #ccc;
+}
+
+.chngStoryButtStop:hover{
+    color: #ccc;
+    cursor: default;
+}
+
 
 
 .mainText{

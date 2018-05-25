@@ -59,6 +59,7 @@ function createInputs(){
     elementsData.forEach(element => {
         createEl(element);
     });
+    checkStoryArrow();
 }
 
 //Gets a random set of 25 threads from askreddit
@@ -238,6 +239,8 @@ function randComment(tryAgain){
             if(prevStories.arr.length > 20){
                 prevStories.arr.shift();
             }
+            prevStories.currDisp = prevStories.arr.length-1;
+            checkStoryArrow();
             threadArr.splice(rThreadNum, 1);
             //console.log(threadArr);
         }
@@ -376,10 +379,44 @@ function changeFilter(){
 function changeStory(numb){
     if(numb == -1 && prevStories.currDisp > 0){
         prevStories.currDisp--;
-    }else if(numb == 1 && prevStories.currDisp < threadArr.length){
+    }else if(numb == 1 && prevStories.currDisp < prevStories.arr.length-1){
         prevStories.currDisp++;
-    } 
+    }
+    if(prevStories.arr[prevStories.currDisp]){
+        document.querySelector('.mainText').innerHTML = prevStories.arr[prevStories.currDisp]; 
+    }
+    checkStoryArrow();
     console.log(prevStories.currDisp);
+}
+
+function  checkStoryArrow(){
+
+    let nextExist = false;
+    let prevExist = false;
+
+    for(let i = 0; i < document.querySelector('.chngStoryButtPrev').classList.length; i++){
+        if(document.querySelector('.chngStoryButtPrev').classList[i] == 'chngStoryButtStop'){
+           prevExist = true;
+        }
+    }
+    for(let i = 0; i < document.querySelector('.chngStoryButtNext').classList.length; i++){
+        if(document.querySelector('.chngStoryButtNext').classList[i] == 'chngStoryButtStop'){
+           nextExist = true;
+        }
+    }
+
+    if(prevStories.currDisp == 0 && !prevExist){
+        document.querySelector('.chngStoryButtPrev').classList.add('chngStoryButtStop');
+    }else if(prevStories.currDisp != 0 && prevExist){
+        document.querySelector('.chngStoryButtPrev').classList.remove('chngStoryButtStop');
+    }
+
+    if((prevStories.currDisp == prevStories.arr.length-1 || prevStories.arr.length == 0) && !nextExist){
+        document.querySelector('.chngStoryButtNext').classList.add('chngStoryButtStop');
+    }else if((prevStories.currDisp != prevStories.arr.length-1 && prevStories.arr.length != 0 ) && nextExist){
+        document.querySelector('.chngStoryButtNext').classList.remove('chngStoryButtStop');
+    }
+
 }
 
 
