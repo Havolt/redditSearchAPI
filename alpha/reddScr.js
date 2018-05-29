@@ -83,11 +83,14 @@ function searchRedd(e){
             callInProgress = true;
             document.body.appendChild(reddScr)
         }else{
-            document.querySelector('.mainText').innerHTML = '';
-            randComment();
             if(threadArr[1] == undefined){
                 searchRedd();
+                
+            }else{
+                document.querySelector('.mainText').innerHTML = '';
+                randComment();
             }
+            
         }
     }
 }
@@ -102,14 +105,6 @@ function searchCallback(data){
         newScr.src= element.data.url + '.json?&jsonp=commentCallback';
         document.body.appendChild(newScr);
         
-    /*
-        let newLink = document.createElement('h2');
-        newLink.classList.add('h2Link');
-        newLink.innerHTML = element.data.title;
-        newLink.addEventListener('click', function(){ window.open(element.data.url)})
-        document.querySelector('.main').appendChild(newLink);
-        console.log(element.data.selftext)
-    */
     });
 }
 
@@ -128,9 +123,13 @@ function commentCallback(data){
             }
         }
         if(threadArr.length < 4){
-            searchRedd()}
+            searchRedd()
+        }
         callInProgress = false;
-        if(userCall){randComment()};
+        if(userCall){
+            
+            randComment()
+        };
         loadNum.runTrue = false;
     }
 }
