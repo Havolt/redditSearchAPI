@@ -161,15 +161,21 @@ function randComment(tryAgain){
             //code that runs when comment is perfect
 
             let tmpText = []
-            let linkRegex = /(http:\/\/)?(www\.)(([^\s]*))/g;;
+            let linkRegex = /\[[^\]]*\]\([^\)]*\)/g;
             let finalStory = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
-            tmpText = linkRegex.exec(finalStory);
-            console.log(tmpText)
-            console.log(finalStory.replace(linkRegex, '<a>' + linkRegex + '</a>' ));
+            finalStory = finalStory.replace(linkRegex, function(x){
+                x = '<a>' + x + '</a>';
+                console.log(x);
+                return x;
+            });
+            console.log(finalStory)
+            //console.log(finalStory.replace(linkRegex, '<a>' + linkRegex + '</a>' ));
 
-            document.querySelector('.mainText').innerHTML = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
+
+            document.querySelector('.mainText').innerHTML = finalStory,;
+            console.log(finalStory)
             fadeText();
-            prevStories.arr.push(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+            prevStories.arr.push(finalStory);
             if(prevStories.arr.length > 20){
                 prevStories.arr.shift();
             }
