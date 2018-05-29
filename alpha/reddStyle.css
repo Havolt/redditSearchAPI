@@ -17,7 +17,7 @@ html, body{
 }
 
 .optionsSec{
-    height: 40px;
+    height: 42px;
 }
 
 .optionsMenu{
@@ -32,9 +32,9 @@ html, body{
 }
 
 .optionsButton{
-    margin-top: 20px;
+    margin-top: 15px;
     margin-right: 20px;
-    padding: 2px 4px;
+    padding: 3px 4px 2px 4px;
     float: right;
     font-size: 1.4em;
     border: 1px solid #777;
@@ -116,6 +116,10 @@ html, body{
 
 .titleSec{
     text-align: center;
+}
+
+.titleSecWMenu{
+    margin-top: 2px;
 }
 
 .titleHead{

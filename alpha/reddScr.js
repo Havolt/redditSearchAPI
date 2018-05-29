@@ -185,12 +185,16 @@ function randComment(tryAgain){
                 x = '<a href="' + linkReddURL + '" target="_blank" >' + x + '</a>';
                 return x;
             });
-            console.log(finalStory)
-            //console.log(finalStory.replace(linkRegex, '<a>' + linkRegex + '</a>' ));
 
+            finalStory = finalStory.split('');
+            for(let i = 0; i < finalStory.length; i++){
+                if(finalStory[i] == '\n'){
+                    finalStory[i] = '<br />';
+                }
+            }
+            finalStory = finalStory.join('');
 
             document.querySelector('.mainText').innerHTML = finalStory;
-            console.log(finalStory)
             fadeText();
             prevStories.arr.push(finalStory);
             if(prevStories.arr.length > 20){
@@ -261,11 +265,13 @@ function onLoad(callLoc){
 function optionsButtFunc(){
     document.querySelector('.optionsButton').classList.add('hidden');
     document.querySelector('.optionsMenu').classList.remove('hidden');
+    document.querySelector('.titleSec').classList.add('titleSecWMenu');
 }
 
 function filterButtFunc(){
     document.querySelector('.optionsButton').classList.remove('hidden');
     document.querySelector('.optionsMenu').classList.add('hidden');
+    document.querySelector('.titleSec').classList.remove('titleSecWMenu');
 }
 
 //changes the display of the filter area
