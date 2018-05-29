@@ -40,7 +40,9 @@ let elementsData = [
     {type: 'div', className: ['chngStoryButtPrev', 'chngStoryButt'], append: '.chngStorySec', inHL: '<i class="fa fa-arrow-circle-left"></i>'},
     {type: 'div', className: ['chngStoryButtNext', 'chngStoryButt'], append: '.chngStorySec', inHL: '<i class="fa fa-arrow-circle-right"></i>'},
     {type: 'div', className: ['main'], append: '.app'},
-    {type: 'div', className: ['mainText'], append: '.main'}
+    {type: 'div', className: ['mainText'], append: '.main'},
+    {type: 'div', className: ['footerSec'], append: '.app'},
+    {type: 'div', className: ['footerText'], append: '.footerSec', inHL: 'The stories presented on this website belong to their respective writers. We are not affiliated with reddit.'}
 ]
 
 //Function that takes object and creates an element
@@ -99,7 +101,6 @@ function searchRedd(e){
 function searchCallback(data){
     if(userCall){document.querySelector('.mainText').innerHTML = ''};
     threadAmt = data.data.children.length;
-    //console.log(data.data.children);
     data.data.children.forEach(element => {
         let newScr = document.createElement('script');
         newScr.src= element.data.url + '.json?&jsonp=commentCallback';
@@ -112,8 +113,6 @@ function searchCallback(data){
 function commentCallback(data){
     threadArr.push(data);
     if(threadArr.length == threadAmt){
-        //console.log(threadArr);
-        console.log(document.querySelectorAll('script'));
         for(let i = document.querySelectorAll('script').length-1; i >= scriptAmt ; i--){
             document.querySelectorAll('script')[i].parentNode.removeChild(document.querySelectorAll('script')[i]);
         }
@@ -146,7 +145,6 @@ function randComment(tryAgain){
     }
     let rCommentNum = Math.floor(Math.random() * threadArr[rThreadNum][1].data.children.length);
 
-
     //checks to see if comment has body on it and if it i the correct length
     if(threadArr[rThreadNum][1].data.children[rCommentNum].data.body == undefined){
         goAgain = true;
@@ -165,6 +163,7 @@ function randComment(tryAgain){
             let linkRegexP2 = /\([^\)]*\)/g;
             let finalStory = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
             finalStory = finalStory.replace(linkRegex, function(x){
+                console.log(x)
                 let linkReddURL;
                 x = x.replace(linkRegexP1, function(y){
                     y = y.split('')
@@ -184,6 +183,13 @@ function randComment(tryAgain){
                 x = '<a href="' + linkReddURL + '" target="_blank" >' + x + '</a>';
                 return x;
             });
+
+            let generalReddURL = /https:\/\/en.wikipedia.org\/wiki\/[\S]*|https:\/\/youtu.be\/[\S]*|https:\/\/www.youtube.com\/watch\?[\S]*/g;
+
+            finalStory = finalStory.replace(generalReddURL, function(x){
+                x = "<a href='" + x + "' target='_blank' >" + x + '</a>';
+                return x;
+            })
 
             finalStory = finalStory.split('');
             for(let i = 0; i < finalStory.length; i++){
@@ -221,8 +227,6 @@ function randComment(tryAgain){
             }
         }
     }
-
-
 }
 
 //gives the text a slight fade effect to inform user its a new story loaded
@@ -378,7 +382,6 @@ function  checkStoryArrow(){
     }
 
 }
-
 
 
 //Initializes application
