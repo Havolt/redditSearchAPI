@@ -162,17 +162,34 @@ function randComment(tryAgain){
 
             let tmpText = []
             let linkRegex = /\[[^\]]*\]\([^\)]*\)/g;
+            let linkRegexP1 = /\[[^\]]*\]/g;
+            let linkRegexP2 = /\([^\)]*\)/g;
             let finalStory = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
             finalStory = finalStory.replace(linkRegex, function(x){
-                x = '<a>' + x + '</a>';
-                console.log(x);
+                let linkReddURL;
+                x = x.replace(linkRegexP1, function(y){
+                    y = y.split('')
+                    y.shift();
+                    y.pop();
+                    y = y.join('');
+                    return y;
+                })
+                x = x.replace(linkRegexP2, function(y){
+                    y = y.split('');
+                    y.shift();
+                    y.pop();
+                    y = y.join('');
+                    linkReddURL = y;
+                    return '';
+                })
+                x = '<a href="' + linkReddURL + '" target="_blank" >' + x + '</a>';
                 return x;
             });
             console.log(finalStory)
             //console.log(finalStory.replace(linkRegex, '<a>' + linkRegex + '</a>' ));
 
 
-            document.querySelector('.mainText').innerHTML = finalStory,;
+            document.querySelector('.mainText').innerHTML = finalStory;
             console.log(finalStory)
             fadeText();
             prevStories.arr.push(finalStory);
