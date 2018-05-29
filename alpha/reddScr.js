@@ -13,6 +13,7 @@ let lmtAtmpts = 0;
 let textFade = {val: 1, change: +1};
 //Array of terms that should return bad request
 let badComm = "**Attention! [Serious] Tag Notice**";
+let badCommReg = /\*\*Attention! \[Serious\] Tag Notice\*\*/g
 //Search terms that are used to search reddit for relevant thread   
 let searchTerm = ['scary', 'creepy', 'paranormal', 'spooky', 'scariest', 'creepiest'];
 let scriptAmt = 1;
@@ -155,60 +156,69 @@ function randComment(tryAgain){
             goAgain = true;
             lmtAtmpts++;
         }else{
-            //code that runs when comment is perfect
 
-            let tmpText = []
-            let linkRegex = /\[[^\]]*\]\([^\)]*\)/g;
-            let linkRegexP1 = /\[[^\]]*\]/g;
-            let linkRegexP2 = /\([^\)]*\)/g;
-            let finalStory = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
-            finalStory = finalStory.replace(linkRegex, function(x){
-                console.log(x)
-                let linkReddURL;
-                x = x.replace(linkRegexP1, function(y){
-                    y = y.split('')
-                    y.shift();
-                    y.pop();
-                    y = y.join('');
-                    return y;
+
+            let attentionCheck = badCommReg.test(threadArr[rThreadNum][1].data.children[rCommentNum].data.body);
+
+            if(!attentionCheck){
+
+
+                //code that runs when comment is perfect
+
+                let tmpText = []
+                let linkRegex = /\[[^\]]*\]\([^\)]*\)/g;
+                let linkRegexP1 = /\[[^\]]*\]/g;
+                let linkRegexP2 = /\([^\)]*\)/g;
+                let finalStory = threadArr[rThreadNum][1].data.children[rCommentNum].data.body;
+                finalStory = finalStory.replace(linkRegex, function(x){
+                    let linkReddURL;
+                    x = x.replace(linkRegexP1, function(y){
+                        y = y.split('')
+                        y.shift();
+                        y.pop();
+                        y = y.join('');
+                        return y;
+                    })
+                    x = x.replace(linkRegexP2, function(y){
+                        y = y.split('');
+                        y.shift();
+                        y.pop();
+                        y = y.join('');
+                        linkReddURL = y;
+                        return '';
+                    })
+                    x = '<a href="' + linkReddURL + '" target="_blank" >' + x + '</a>';
+                    return x;
+                });
+
+                let generalReddURL = /https:\/\/en.wikipedia.org\/wiki\/[\S]*|https:\/\/youtu.be\/[\S]*|https:\/\/www.youtube.com\/watch\?[\S]*/g;
+
+                finalStory = finalStory.replace(generalReddURL, function(x){
+                    x = "<a href='" + x + "' target='_blank' >" + x + '</a>';
+                    return x;
                 })
-                x = x.replace(linkRegexP2, function(y){
-                    y = y.split('');
-                    y.shift();
-                    y.pop();
-                    y = y.join('');
-                    linkReddURL = y;
-                    return '';
-                })
-                x = '<a href="' + linkReddURL + '" target="_blank" >' + x + '</a>';
-                return x;
-            });
 
-            let generalReddURL = /https:\/\/en.wikipedia.org\/wiki\/[\S]*|https:\/\/youtu.be\/[\S]*|https:\/\/www.youtube.com\/watch\?[\S]*/g;
-
-            finalStory = finalStory.replace(generalReddURL, function(x){
-                x = "<a href='" + x + "' target='_blank' >" + x + '</a>';
-                return x;
-            })
-
-            finalStory = finalStory.split('');
-            for(let i = 0; i < finalStory.length; i++){
-                if(finalStory[i] == '\n'){
-                    finalStory[i] = '<br />';
+                finalStory = finalStory.split('');
+                for(let i = 0; i < finalStory.length; i++){
+                    if(finalStory[i] == '\n'){
+                        finalStory[i] = '<br />';
+                    }
                 }
-            }
-            finalStory = finalStory.join('');
+                finalStory = finalStory.join('');
 
-            document.querySelector('.mainText').innerHTML = finalStory;
-            fadeText();
-            prevStories.arr.push(finalStory);
-            if(prevStories.arr.length > 20){
-                prevStories.arr.shift();
+                document.querySelector('.mainText').innerHTML = finalStory;
+                fadeText();
+                prevStories.arr.push(finalStory);
+                if(prevStories.arr.length > 20){
+                    prevStories.arr.shift();
+                }
+                prevStories.currDisp = prevStories.arr.length-1;
+                checkStoryArrow();
+                threadArr.splice(rThreadNum, 1);
+            }else{
+                goAgain = true;
             }
-            prevStories.currDisp = prevStories.arr.length-1;
-            checkStoryArrow();
-            threadArr.splice(rThreadNum, 1);
-        }
+        } 
     }
 
     //makes randComment run again if it hasnt obtained correct length story
@@ -265,12 +275,13 @@ function onLoad(callLoc){
     }
 }
 
+//Event function for options button
 function optionsButtFunc(){
     document.querySelector('.optionsButton').classList.add('hidden');
     document.querySelector('.optionsMenu').classList.remove('hidden');
     document.querySelector('.titleSec').classList.add('titleSecWMenu');
 }
-
+//Event function for options cross
 function filterButtFunc(){
     document.querySelector('.optionsButton').classList.remove('hidden');
     document.querySelector('.optionsMenu').classList.add('hidden');
@@ -380,7 +391,6 @@ function  checkStoryArrow(){
     }else if((prevStories.currDisp != prevStories.arr.length-1 && prevStories.arr.length != 0 ) && nextExist){
         document.querySelector('.chngStoryButtNext').classList.remove('chngStoryButtStop');
     }
-
 }
 
 
